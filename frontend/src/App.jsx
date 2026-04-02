@@ -36,7 +36,7 @@ function App() {
 
   const fetchPlans = async () => {
     try {
-      const res = await api.get("/plans");
+      const res = await api.get("/api/plans");
 
       setPlans(res.data?.length ? [res.data[0]] : []);// only takes latest one 
     } catch (err) {
@@ -47,7 +47,7 @@ function App() {
     try {
       setRescheduling(true);
 
-      await api.post(`/plans/${id}/reschedule`);
+      await api.post(`/api/plans/${id}/reschedule`);
       fetchPlans();
 
     } catch (err) {
@@ -59,7 +59,7 @@ function App() {
 
   const markComplete = async (id, day) => {
     try {
-      await api.put(`/plans/${id}/complete`, {
+      await api.put(`/api/plans/${id}/complete`, {
         day: day
       });
 
