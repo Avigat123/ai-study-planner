@@ -1,0 +1,17 @@
+# Node
+node_modules
+frontend/node_modules
+server/node_modules
+
+# Env
+.env
+server/.env
+
+# Build
+dist
+
+# Logs
+*.log
+
+# OS
+.DS_Store
