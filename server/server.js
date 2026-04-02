@@ -12,7 +12,7 @@ const app = express();
 // middleware
 app.use(express.json());
 app.use(cors());
-app.use("/", planRoutes);
+app.use("/plans", planRoutes);
 app.use("/auth", authRoutes);
 
 // test route
