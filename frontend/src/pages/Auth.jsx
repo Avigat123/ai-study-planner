@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000"; // change later for deploy
+const BASE_URL = "https://ai-study-planner-iktk.onrender.com"; // change later for deploy
 
 function Auth({ setToken }) { // receive setToken from App.jsx
     const [isLogin, setIsLogin] = useState(true);

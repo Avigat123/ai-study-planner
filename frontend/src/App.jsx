@@ -12,7 +12,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   const api = axios.create({
-    baseURL: "http://localhost:5000"
+    baseURL: "https://ai-study-planner-iktk.onrender.com"
   });
 
   api.interceptors.request.use((config) => {
