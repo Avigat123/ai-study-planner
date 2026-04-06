@@ -41,9 +41,10 @@ Format:
         console.error("AI Error:", err);
 
         // fallback (VERY IMPORTANT)
+        const errorReason = err.message || "Unknown error";
         return Array.from({ length: days }, (_, i) => ({
             day: i + 1,
-            task: `Study ${subject} - Day ${i + 1}`
+            task: `[AI Error: ${errorReason}] Study ${subject} - Day ${i + 1}`
         }));
     }
 };
