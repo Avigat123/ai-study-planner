@@ -2,6 +2,10 @@
 
 Welcome to the **AI Study Planner**! This is a full-stack web application that leverages artificial intelligence to create perfectly scheduled, localized, and detailed study plans for any subject. Just enter your subject, deadline, and difficulty level, and let the AI do the scheduling.
 
+### 🌐 Live Links
+- **Frontend App**: [https://ai-study-planner-1-et0c.onrender.com](https://ai-study-planner-1-et0c.onrender.com)
+- **Backend API**: [https://ai-study-planner-iktk.onrender.com](https://ai-study-planner-iktk.onrender.com)
+
 ## Features ✨
 
 - **🤖 AI-Powered Study Plans**: Creates structured, realistic day-by-day tasks based on your subject, difficulty setting, and deadlines using Large Language Models.
