@@ -75,7 +75,7 @@ function App() {
       setLoading(true); //  start loading
       const token = localStorage.getItem("token");
 
-      await api.post("/plans", {
+      await api.post("/api/plans", {
         subject,
         deadline,
         difficulty

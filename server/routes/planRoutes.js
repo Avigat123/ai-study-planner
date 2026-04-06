@@ -4,8 +4,8 @@ import { generatePlan } from "../utils/ai.js";
 import { protect } from "../middleware/auth.js";
 const router = express.Router();
 
-// POST /plans
-router.post("/plans", protect, async (req, res) => {
+// POST /
+router.post("/", protect, async (req, res) => {
     try {
         const { subject, deadline, difficulty } = req.body;
 
@@ -45,7 +45,7 @@ router.post("/plans", protect, async (req, res) => {
     }
 });
 
-router.get("/plans", protect, async (req, res) => {
+router.get("/", protect, async (req, res) => {
     try {
         const plans = await StudyPlan.find({ user: req.user.id })
             .sort({ createdAt: -1 });
@@ -56,7 +56,7 @@ router.get("/plans", protect, async (req, res) => {
     }
 });
 
-router.put("/plans/:id/complete", protect, async (req, res) => {
+router.put("/:id/complete", protect, async (req, res) => {
     try {
         const { id } = req.params;
         const { day } = req.body;
@@ -70,7 +70,7 @@ router.put("/plans/:id/complete", protect, async (req, res) => {
             return res.status(404).json({ message: "Plan not found" });
         }
 
-        // find the specific day
+        // find the specifics day
         const task = studyPlan.plan.find(item => item.day === day);
 
         if (!task) {
@@ -91,7 +91,7 @@ router.put("/plans/:id/complete", protect, async (req, res) => {
 });
 
 
-router.post("/plans/:id/reschedule", protect, async (req, res) => {
+router.post("/:id/reschedule", protect, async (req, res) => {
     try {
         const { id } = req.params;
 
