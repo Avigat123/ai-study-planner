@@ -2,11 +2,16 @@ import OpenAI from "openai";
 
 
 export const generatePlan = async (subject, days, difficulty) => {
-    const client = new OpenAI({
-        baseURL: "https://openrouter.ai/api/v1",
-        apiKey: process.env.OPENAI_API_KEY
-    });
-    const prompt = `
+    try {
+        if (!process.env.OPENAI_API_KEY) {
+            throw new Error("Missing OPENAI_API_KEY environment variable");
+        }
+
+        const client = new OpenAI({
+            baseURL: "https://openrouter.ai/api/v1",
+            apiKey: process.env.OPENAI_API_KEY
+        });
+        const prompt = `
 Create a realistic ${days}-day study plan for ${subject}.
 Difficulty: ${difficulty}.
 
@@ -19,7 +24,6 @@ Format:
 ]
 `;
 
-    try {
         const response = await client.chat.completions.create({
             model: "openai/gpt-4o-mini",
             messages: [{ role: "user", content: prompt }]
