@@ -61,6 +61,38 @@ src/
 
 ---
 
+## ⚙️ Backend Architecture
+
+```
+server/
+  server.js                          ← Express app entry point, MongoDB connection
+  routes/
+    authRoutes.js                    ← POST /auth/signup, POST /auth/login
+    planRoutes.js                    ← CRUD + reschedule for study plans
+  middleware/
+    auth.js                          ← JWT verification middleware (protect)
+  models/
+    User.js                          ← Mongoose schema: email, hashed password
+    StudyPlan.js                     ← Mongoose schema: subject, deadline, difficulty, plan[]
+  utils/
+    ai.js                            ← OpenAI/OpenRouter call → returns parsed day-task array
+```
+
+### 📡 API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/auth/signup` | — | Create account, returns JWT |
+| `POST` | `/auth/login` | — | Verify credentials, returns JWT |
+| `GET` | `/api/plans` | ✅ | Fetch all plans for the authenticated user |
+| `POST` | `/api/plans` | ✅ | Generate a new AI study plan |
+| `PUT` | `/api/plans/:id/complete` | ✅ | Mark a specific day's task as complete |
+| `POST` | `/api/plans/:id/reschedule` | ✅ | AI regenerates all incomplete tasks |
+
+
+
+---
+
 ## 🚀 Local Development
 
 ### 1. Clone the repository
