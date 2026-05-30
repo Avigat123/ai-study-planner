@@ -1,114 +1,180 @@
 import { useState } from "react";
+import { Eye, EyeOff, Check, BookOpen } from "lucide-react";
 import axios from "axios";
 
-const BASE_URL = "https://ai-study-planner-iktk.onrender.com"; // change later for deploy
+const BASE_URL = "https://ai-study-planner-iktk.onrender.com";
 
-function Auth({ setToken }) { // receive setToken from App.jsx
-    const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+const BENEFITS = [
+  "Personalized study schedules built around your deadline",
+  "AI-powered planning that adapts to your learning pace",
+  "Smart rescheduling when life gets in the way",
+  "Progress tracking across all your active plans",
+];
 
-    const handleAuth = async () => {
-        try {
-            const url = isLogin ? "/auth/login" : "/auth/signup";
+function Auth({ setToken }) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-            const res = await axios.post(`${BASE_URL}${url}`, {
-                email,
-                password
-            });
+  const handleAuth = async (e) => {
+    e?.preventDefault();
+    setError("");
 
-            localStorage.setItem("token", res.data.token);
-            setToken(res.data.token); //  works for BOTH login + signup
+    if (!email.trim() || !password.trim()) {
+      setError("Email and password are required.");
+      return;
+    }
 
-        } catch (err) {
-            console.error(err);
-            alert("Error occurred");
-        }
-    };
+    try {
+      setLoading(true);
+      const url = isLogin ? "/auth/login" : "/auth/signup";
+      const res = await axios.post(`${BASE_URL}${url}`, { email, password });
 
-    return (
-        <div
-            style={{
-                minHeight: "100vh",
-                background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white"
-            }}
-        >
-            <div
-                style={{
-                    width: "350px",
-                    padding: "30px",
-                    borderRadius: "20px",
-                    background: "rgba(255,255,255,0.05)",
-                    backdropFilter: "blur(15px)",
-                    boxShadow: "0 8px 40px rgba(0,0,0,0.5)"
-                }}
-            >
-                <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-                    {isLogin ? "Login" : "Signup"}
-                </h2>
+      // Store token + email for welcome message
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userEmail", email);
+      setToken(res.data.token);
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        (isLogin ? "Invalid email or password." : "Could not create account.");
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={inputStyle}
-                />
+  const switchMode = () => {
+    setIsLogin(!isLogin);
+    setError("");
+    setEmail("");
+    setPassword("");
+  };
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={inputStyle}
-                />
-
-                <button onClick={handleAuth} style={buttonStyle}>
-                    {isLogin ? "Login" : "Signup"}
-                </button>
-
-                <p
-                    onClick={() => setIsLogin(!isLogin)}
-                    style={{
-                        marginTop: "15px",
-                        textAlign: "center",
-                        cursor: "pointer",
-                        color: "#cbd5f5"
-                    }}
-                >
-                    {isLogin
-                        ? "Don't have an account? Signup"
-                        : "Already have an account? Login"}
-                </p>
+  return (
+    <div className="auth-shell">
+      {/* ── Brand Panel ───────────────────────────────────────── */}
+      <div className="auth-brand">
+        <div className="auth-brand-grid" />
+        <div className="auth-brand-content">
+          <div className="auth-brand-logo">
+            <div className="auth-brand-mark">
+              <BookOpen size={18} color="#fff" strokeWidth={2} />
             </div>
+            <span className="auth-brand-name">StudyPlanner</span>
+          </div>
+
+          <p className="auth-brand-tagline">
+            Turn any learning goal into a realistic study roadmap.
+          </p>
+
+          <ul className="auth-brand-benefits">
+            {BENEFITS.map((benefit, i) => (
+              <li key={i} className="auth-benefit-item">
+                <span className="auth-benefit-icon">
+                  <Check size={11} strokeWidth={3} />
+                </span>
+                {benefit}
+              </li>
+            ))}
+          </ul>
         </div>
-    );
+      </div>
+
+      {/* ── Form Panel ────────────────────────────────────────── */}
+      <div className="auth-form-panel">
+        <div className="auth-form-box">
+          <h1 className="auth-form-heading">
+            {isLogin ? "Welcome back" : "Create your account"}
+          </h1>
+          <p className="auth-form-sub">
+            {isLogin
+              ? "Sign in to view your study plans and track progress."
+              : "Get started by creating a free account."}
+          </p>
+
+          {error && (
+            <div className="auth-error-banner" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form className="auth-form-fields" onSubmit={handleAuth} noValidate>
+            {/* Email */}
+            <div className="form-group">
+              <label className="form-label" htmlFor="auth-email">
+                Email address
+              </label>
+              <input
+                id="auth-email"
+                type="email"
+                className="form-input"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                autoFocus
+              />
+            </div>
+
+            {/* Password */}
+            <div className="form-group">
+              <label className="form-label" htmlFor="auth-password">
+                Password
+              </label>
+              <div className="input-wrapper">
+                <input
+                  id="auth-password"
+                  type={showPassword ? "text" : "password"}
+                  className="form-input"
+                  placeholder={isLogin ? "Enter your password" : "Min. 6 characters"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete={isLogin ? "current-password" : "new-password"}
+                />
+                <button
+                  type="button"
+                  className="input-icon-right"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg btn-full"
+              disabled={loading}
+              id="auth-submit"
+            >
+              {loading ? (
+                <>
+                  <span className="spinner" />
+                  {isLogin ? "Signing in..." : "Creating account..."}
+                </>
+              ) : isLogin ? (
+                "Sign in"
+              ) : (
+                "Create account"
+              )}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            <button className="auth-switch-link" onClick={switchMode} type="button">
+              {isLogin ? "Sign up" : "Sign in"}
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-const inputStyle = {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "12px",
-    borderRadius: "8px",
-    border: "none",
-    outline: "none"
-};
-
-const buttonStyle = {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "10px",
-    border: "none",
-    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-    color: "white",
-    fontWeight: "bold",
-    cursor: "pointer"
-};
-
 export default Auth;
-
-
