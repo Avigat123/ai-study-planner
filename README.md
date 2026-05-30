@@ -1,36 +1,67 @@
 # AI Study Planner 🎓
 
-Welcome to the **AI Study Planner**! This is a full-stack web application that leverages artificial intelligence to create perfectly scheduled, localized, and detailed study plans for any subject. Just enter your subject, deadline, and difficulty level, and let the AI do the scheduling.
+A full-stack productivity application that generates AI-powered, day-by-day study roadmaps. Enter a subject, deadline, and difficulty level — the AI builds a structured plan. Track progress, mark tasks complete, and reschedule when needed.
 
 ### 🌐 Live Links
-- **Frontend App**: [https://ai-study-planner-1-et0c.onrender.com](https://ai-study-planner-1-et0c.onrender.com)
+- **Frontend**: [https://ai-study-planner-1-et0c.onrender.com](https://ai-study-planner-1-et0c.onrender.com)
 - **Backend API**: [https://ai-study-planner-iktk.onrender.com](https://ai-study-planner-iktk.onrender.com)
 
-## Features ✨
+---
 
-- **🤖 AI-Powered Study Plans**: Creates structured, realistic day-by-day tasks based on your subject, difficulty setting, and deadlines using Large Language Models.
-- **🔄 Dynamic Rescheduling**: Falling behind? Reschedule incomplete tasks with a single click and have the AI reorganize your remaining workload.
-- **🔐 User Authentication**: Secure JWT-based Login and Signup capabilities so your plans are always securely tied to your user.
-- **📊 Progress Tracking**: Built-in progress bar and daily task completion toggles.
-- **✨ Modern UI**: Glassmorphism dashboard with smooth micro-interactions and dark-mode optimization.
+## ✨ Features
 
-## Tech Stack 🛠️
+- **🤖 AI-Generated Study Plans** — Structured, realistic day-by-day tasks built from your subject, difficulty, and deadline using LLMs
+- **🔄 Smart Rescheduling** — AI rebalances remaining incomplete tasks with one click
+- **📊 Progress Tracking** — Progress bars, completion percentages, and per-task status across all active plans
+- **🎯 Today's Focus** — Always surfaces the next pending task so you know exactly what to work on
+- **📈 Dashboard Overview** — Stat cards showing active plans, completed tasks, overall progress, and days remaining
+- **🔐 JWT Authentication** — Secure signup and login; all plans are scoped to the authenticated user
+
+---
+
+## 🛠️ Tech Stack
 
 **Frontend:**
-- React.js
-- Axios (for API integrations)
-- Flexbox/Grid + Custom CSS styling
+- React 19 + Vite
+- Vanilla CSS (custom design system — 8px spacing scale, CSS custom properties)
+- Axios
+- Lucide React (icons)
 
 **Backend:**
-- Node.js & Express.js
-- MongoDB & Mongoose (Database)
-- JWT (JSON Web Tokens) for authentication
-- bcryptjs for password hashing
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT + bcryptjs (authentication)
+- OpenAI API client via OpenRouter (`gpt-4o-mini`)
 
-**AI Configuration:**
-- OpenAI API Client (configured to utilize OpenRouter's `gpt-4o-mini` model)
+---
 
-## Local Development 🚀
+## 🗂️ Frontend Architecture
+
+```
+src/
+  api/
+    client.js                        ← shared axios instance + JWT interceptor
+  pages/
+    Auth.jsx                         ← split-panel login / signup
+    Dashboard.jsx                    ← main dashboard page
+  components/
+    layout/
+      Sidebar.jsx                    ← fixed left navigation
+      TopBar.jsx                     ← mobile header
+    dashboard/
+      WelcomeBanner.jsx              ← greeting + progress context
+      StatCards.jsx                  ← 4 computed metric cards
+      TodayFocus.jsx                 ← first incomplete task, prominent CTA
+      PlanGenerator.jsx              ← create new roadmap form
+      PlanCard.jsx                   ← collapsible plan card with progress bar
+      TaskCard.jsx                   ← individual day task row
+      RescheduleCard.jsx             ← AI reschedule prompt
+      EmptyState.jsx                 ← zero-state UI
+```
+
+---
+
+## 🚀 Local Development
 
 ### 1. Clone the repository
 ```bash
@@ -39,13 +70,12 @@ cd ai-study-planner
 ```
 
 ### 2. Setup the Backend
-Open a terminal and navigate to the `server` directory:
 ```bash
 cd server
 npm install
 ```
 
-Create a `.env` file in the `server` directory and add the following variables:
+Create a `.env` file in the `server` directory:
 ```env
 MONGO_URI=your_mongodb_cluster_uri
 PORT=5000
@@ -53,35 +83,31 @@ JWT_SECRET=your_super_secret_jwt_key
 OPENAI_API_KEY=your_openrouter_or_openai_api_key
 ```
 
-Start the backend server:
+Start the server:
 ```bash
-npm start
-# or for development: npm run dev
+node --watch server.js
 ```
 
 ### 3. Setup the Frontend
-Open a new terminal and navigate to the `frontend` directory:
 ```bash
 cd frontend
 npm install
-```
-
-Start the frontend development server:
-```bash
 npm run dev
-# or npm start depending on your configuration
 ```
 
-### 4. Open the Application
-Navigate to `http://localhost:5173` (or the port specified by Vite/React) in your browser!
-
-## Deployment 🌍
-If deploying to platforms like **Render**, **Vercel**, or **Heroku**, ensure you configure the following Environment Variables in the deployed backend dashboard to prevent the server from functioning incorrectly:
-- `MONGO_URI`
-- `OPENAI_API_KEY`
-- `JWT_SECRET`
-
-**Note on AI Failures**: If the `OPENAI_API_KEY` is not provided in your production environment, the app contains fallback safety logic that will still gracefully generate a sequential placeholder plan, preventing your application from suffering 500 crashes!
+Open `http://localhost:5173` in your browser.
 
 ---
+
+## 🌍 Deployment
+
+When deploying the backend (Render, Railway, etc.), configure these environment variables:
+- `MONGO_URI`
+- `JWT_SECRET`
+- `OPENAI_API_KEY`
+
+> **Note:** If `OPENAI_API_KEY` is missing or the AI call fails, the backend includes fallback logic that generates a sequential placeholder plan rather than returning a 500 error.
+
+---
+
 *Developed by [Avigat123](https://github.com/Avigat123)*
